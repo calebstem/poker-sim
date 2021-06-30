@@ -4,7 +4,7 @@ function getDeck(){
     const deck = new Array();
     for(let i = 0; i < suits.length; i++){
         for(let j = 0; j < value.length; j++){
-            let card = {Value: value[j], Suit: suits[i]};
+            let card = {value: value[j], suit: suits[i]};
             deck.push(card);
         }
     }
@@ -26,20 +26,22 @@ function shuffle(deck){
 }
 
 function drawFrom(deck){
-    let hand = [deck.pop(),deck.pop()];
-    return hand;
-}
-
-function displayHand(){
-    drawFrom(deck1);
-    console.log(hand);
-    return hand.value + hand.suits;
+    return [deck.pop(),deck.pop()];
 }
 
 let deck1 = getDeck();
 shuffle(deck1);
 
-document.getElementById('drawHand').onclick = displayHand;
+let hand = drawFrom(deck1);
+let handValue = hand.map(card => card.value);
+let handSuits = hand.map(card => card.suit);
+console.log(handValue);
+console.log(handSuits);
+console.log(hand);
 
+const handDisplay = document.getElementById('handDisplay');
+function stringHand(){
+    document.getElementById('handDisplay').textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
+}
 
-//document.getElementById('hand').textContent
+document.getElementById('drawHand').onclick = function(){handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`};
