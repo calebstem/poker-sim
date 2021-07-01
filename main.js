@@ -39,6 +39,10 @@ function drawTurn(deck){
     return turn;
 }
 
+function drawRiver(deck){
+    river = [deck.pop()];
+    return river;
+}
 
 let newDeck;
 let stack = 100;
@@ -48,6 +52,8 @@ let flop = '';
 let flopDrawn = false;
 let turn = '';
 let turnDrawn = false;
+let river = '';
+let riverDrawn = '';
 const betInput = document.getElementById('betSize');
 
 
@@ -56,14 +62,16 @@ function newHand(){
     shuffle(newDeck);
     hand = drawFrom(newDeck);
     flopDrawn = false;
+    turnDrawn = false;
+    riverDrawn = false;
     return hand;
 }
 
 function potIn(){
-    console.log(stack);
-    if(betInput.value <= stack && betInput.value > 0){
-        pot = betInput.value;
-        stack -= pot;
+    let betAmount = Number(betInput.value);
+    if(betAmount <= stack && betAmount > 0){
+        pot += betAmount;
+        stack -= betAmount;
     }
     document.getElementById('pot').textContent = `Pot:${pot}`
     document.getElementById('stack').textContent = `Stack:${stack}`
@@ -74,6 +82,8 @@ function raise(){
         stringFlop();
     } else if(!turnDrawn){
         stringTurn();
+    } else if (!riverDrawn){
+        stringRiver();
     }
 }
 
@@ -109,6 +119,20 @@ let stringTurn = (function(){
             handValue = turn.map(card => card.value);
             handSuits = turn.map(card => card.suit);
             turnDisplay.textContent = `${handValue[0]}${handSuits[0]}`;
+        }
+    };
+})();
+
+let stringRiver = (function(){
+    const riverDisplay = document.getElementById('riverDisplay');
+    return function() {
+        if (!riverDrawn){
+            riverDrawn = true;
+            potIn();
+            drawRiver(newDeck);
+            handValue = river.map(card => card.value);
+            handSuits = river.map(card => card.suit);
+            riverDisplay.textContent = `${handValue[0]}${handSuits[0]}`;
         }
     };
 })();
