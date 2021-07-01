@@ -58,14 +58,19 @@ function stringHand(){
     handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
 }
 
-function stringFlop(){
-    drawFlop(newDeck);
+let stringFlop = (function(){
+    let flopDrawn = false;
     const flopDisplay = document.getElementById('flopDisplay');
-    handValue = flop.map(card => card.value);
-    handSuits = flop.map(card => card.suit);
-    flopDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]},${handValue[2]}${handSuits[2]}`;
-}
-
+    return function() {
+        if (!flopDrawn){
+            flopDrawn = true;
+            drawFlop(newDeck);
+            handValue = flop.map(card => card.value);
+            handSuits = flop.map(card => card.suit);
+            flopDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]},${handValue[2]}${handSuits[2]}`;
+        }
+    };
+})();
 
 document.getElementById('newHand').onclick = function () {newHand()};
 document.getElementById('drawHand').onclick = function () {stringHand()};
