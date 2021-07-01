@@ -31,8 +31,12 @@ function drawFrom(deck){
 
 function drawFlop(deck){
     flop = [deck.pop(),deck.pop(),deck.pop()];
-    console.table(flop);
     return flop;
+}
+
+function drawTurn(deck){
+    turn = [deck.pop()];
+    return turn;
 }
 
 
@@ -42,6 +46,8 @@ let pot = 0;
 let hand = '';
 let flop = '';
 let flopDrawn = false;
+let turn = '';
+let turnDrawn = false;
 const betInput = document.getElementById('betSize');
 
 
@@ -54,15 +60,25 @@ function newHand(){
 }
 
 function potIn(){
-    pot = betInput.value;
-    console.log(pot);
-    stack -= pot;
+    console.log(stack);
+    if(betInput.value <= stack && betInput.value > 0){
+        pot = betInput.value;
+        stack -= pot;
+    }
     document.getElementById('pot').textContent = `Pot:${pot}`
     document.getElementById('stack').textContent = `Stack:${stack}`
 }
 
+function raise(){
+    if(!flopDrawn){
+        stringFlop();
+    } else if(!turnDrawn){
+        stringTurn();
+    }
+}
 
 function stringHand(){
+    newHand();
     const handDisplay = document.getElementById('handDisplay');
     handValue = hand.map(card => card.value);
     handSuits = hand.map(card => card.suit);
@@ -83,8 +99,23 @@ let stringFlop = (function(){
     };
 })();
 
+let stringTurn = (function(){
+    const turnDisplay = document.getElementById('turnDisplay');
+    return function() {
+        if (!turnDrawn){
+            turnDrawn = true;
+            potIn();
+            drawTurn(newDeck);
+            handValue = turn.map(card => card.value);
+            handSuits = turn.map(card => card.suit);
+            turnDisplay.textContent = `${handValue[0]}${handSuits[0]}`;
+        }
+    };
+})();
 
-document.getElementById('newHand').onclick = function () {newHand()};
+document.getElementById('pot').textContent = `Pot:${pot}`
+document.getElementById('stack').textContent = `Stack:${stack}`
+
 document.getElementById('drawHand').onclick = function () {stringHand()};
-document.getElementById('flopButton').onclick = function () {stringFlop()};
+document.getElementById('flopButton').onclick = function () {raise()};
 
