@@ -29,19 +29,45 @@ function drawFrom(deck){
     return [deck.pop(),deck.pop()];
 }
 
-let deck1 = getDeck();
-shuffle(deck1);
-
-let hand = drawFrom(deck1);
-let handValue = hand.map(card => card.value);
-let handSuits = hand.map(card => card.suit);
-console.log(handValue);
-console.log(handSuits);
-console.log(hand);
-
-const handDisplay = document.getElementById('handDisplay');
-function stringHand(){
-    document.getElementById('handDisplay').textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
+function drawFlop(deck){
+    flop = [deck.pop(),deck.pop(),deck.pop()];
+    console.table(flop);
+    return flop;
 }
 
-document.getElementById('drawHand').onclick = function(){handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`};
+
+let newDeck;
+let hand = '';
+let flop = '';
+
+
+function newHand(){
+    newDeck = getDeck();
+    shuffle(newDeck);
+    hand = drawFrom(newDeck);
+    return hand;
+}
+
+
+
+
+function stringHand(){
+    const handDisplay = document.getElementById('handDisplay');
+    handValue = hand.map(card => card.value);
+    handSuits = hand.map(card => card.suit);
+    handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
+}
+
+function stringFlop(){
+    drawFlop(newDeck);
+    const flopDisplay = document.getElementById('flopDisplay');
+    handValue = flop.map(card => card.value);
+    handSuits = flop.map(card => card.suit);
+    flopDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]},${handValue[2]}${handSuits[2]}`;
+}
+
+
+document.getElementById('newHand').onclick = function () {newHand()};
+document.getElementById('drawHand').onclick = function () {stringHand()};
+document.getElementById('flopButton').onclick = function () {stringFlop()};
+
