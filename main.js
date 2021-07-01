@@ -37,18 +37,29 @@ function drawFlop(deck){
 
 
 let newDeck;
+let stack = 100;
+let pot = 0;
 let hand = '';
 let flop = '';
+let flopDrawn = false;
+const betInput = document.getElementById('betSize');
 
 
 function newHand(){
     newDeck = getDeck();
     shuffle(newDeck);
     hand = drawFrom(newDeck);
+    flopDrawn = false;
     return hand;
 }
 
-
+function potIn(){
+    pot = betInput.value;
+    console.log(pot);
+    stack -= pot;
+    document.getElementById('pot').textContent = `Pot:${pot}`
+    document.getElementById('stack').textContent = `Stack:${stack}`
+}
 
 
 function stringHand(){
@@ -59,11 +70,11 @@ function stringHand(){
 }
 
 let stringFlop = (function(){
-    let flopDrawn = false;
     const flopDisplay = document.getElementById('flopDisplay');
     return function() {
         if (!flopDrawn){
             flopDrawn = true;
+            potIn();
             drawFlop(newDeck);
             handValue = flop.map(card => card.value);
             handSuits = flop.map(card => card.suit);
@@ -71,6 +82,7 @@ let stringFlop = (function(){
         }
     };
 })();
+
 
 document.getElementById('newHand').onclick = function () {newHand()};
 document.getElementById('drawHand').onclick = function () {stringHand()};

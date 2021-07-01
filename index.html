@@ -8,10 +8,14 @@
     <link rel='stylesheet' href="style.css"/>
 </head>
 <body>
+    <div id='pot'></div>
+    <div id='stack'></div>
+    <label for='betSize'>Bet Size:</label>
+    <input type='number' id='betSize' minlength="0">
     <button type="button" id="newHand">New Hand</button>
     <button type="button" id="drawHand">Draw Hand</button>
     <div id='handDisplay'></div>
-    <button type="button" id="flopButton">Flop</button>
+    <button type="button" id="flopButton">Raise</button>
     <div id='flopDisplay'></div>
     <script src='main.js'></script>
 </body>
