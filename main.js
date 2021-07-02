@@ -1,21 +1,21 @@
-const suits = ['s', 'd', 'c', 'h'];
-const value = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+const suits = ['s', 'd', 'c', 'h']; // creates an array of all suits
+const value = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']; //array of values
 function getDeck(){
     const deck = new Array();
-    for(let i = 0; i < suits.length; i++){
-        for(let j = 0; j < value.length; j++){
-            let card = {value: value[j], suit: suits[i]};
-            deck.push(card);
+    for(let i = 0; i < suits.length; i++){ //goes through each suit
+        for(let j = 0; j < value.length; j++){ //within every suit it goes through the values
+            let card = {value: value[j], suit: suits[i]}; //combines suit and value
+            deck.push(card); //adds new card to the array
         }
     }
-    return deck;
+    return deck; //an array containing a list of suits and value
 }
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function shuffle(deck){
+function shuffle(deck){ //implementation of fisher yates algorithm
     let j = 0;
     for (let i = (deck.length - 1); i >= 1; i--){
         j = randomIntFromInterval(0, i)
@@ -30,29 +30,33 @@ function drawFrom(deck){
 }
 
 function drawFlop(deck){
-    flop = [deck.pop(),deck.pop(),deck.pop()];
-    return flop;
+    let flop = [deck.pop(),deck.pop(),deck.pop()];
+    board = board.concat(flop);
+    flopDrawn = true;
+    return;
 }
 
 function drawTurn(deck){
-    turn = [deck.pop()];
-    return turn;
+    let turn = [deck.pop()];
+    board = board.concat(turn);
+    turnDrawn = true;
+    return;
 }
 
 function drawRiver(deck){
-    river = [deck.pop()];
-    return river;
+    let river = [deck.pop()];
+    board= board.concat(river);
+    riverDrawn = true;
+    return;
 }
 
 let newDeck;
 let stack = 100;
 let pot = 0;
 let hand = '';
-let flop = '';
+let board = [];
 let flopDrawn = false;
-let turn = '';
 let turnDrawn = false;
-let river = '';
 let riverDrawn = '';
 const betInput = document.getElementById('betSize');
 
@@ -64,6 +68,8 @@ function newHand(){
     flopDrawn = false;
     turnDrawn = false;
     riverDrawn = false;
+    board = [];
+    boardDisplay.textContent = '';
     return hand;
 }
 
@@ -79,11 +85,17 @@ function potIn(){
 
 function raise(){
     if(!flopDrawn){
-        stringFlop();
+        potIn();
+        drawFlop(newDeck);
+        stringBoard();
     } else if(!turnDrawn){
-        stringTurn();
+        potIn();
+        drawTurn(newDeck);
+        stringBoard();
     } else if (!riverDrawn){
-        stringRiver();
+        potIn();
+        drawRiver(newDeck);
+        stringBoard();
     }
 }
 
@@ -95,47 +107,18 @@ function stringHand(){
     handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
 }
 
-let stringFlop = (function(){
-    const flopDisplay = document.getElementById('flopDisplay');
-    return function() {
-        if (!flopDrawn){
-            flopDrawn = true;
-            potIn();
-            drawFlop(newDeck);
-            handValue = flop.map(card => card.value);
-            handSuits = flop.map(card => card.suit);
-            flopDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]},${handValue[2]}${handSuits[2]}`;
-        }
-    };
-})();
-
-let stringTurn = (function(){
-    const turnDisplay = document.getElementById('turnDisplay');
-    return function() {
-        if (!turnDrawn){
-            turnDrawn = true;
-            potIn();
-            drawTurn(newDeck);
-            handValue = turn.map(card => card.value);
-            handSuits = turn.map(card => card.suit);
-            turnDisplay.textContent = `${handValue[0]}${handSuits[0]}`;
-        }
-    };
-})();
-
-let stringRiver = (function(){
-    const riverDisplay = document.getElementById('riverDisplay');
-    return function() {
-        if (!riverDrawn){
-            riverDrawn = true;
-            potIn();
-            drawRiver(newDeck);
-            handValue = river.map(card => card.value);
-            handSuits = river.map(card => card.suit);
-            riverDisplay.textContent = `${handValue[0]}${handSuits[0]}`;
-        }
-    };
-})();
+function stringBoard(){
+    const boardDisplay = document.getElementById('boardDisplay');
+    console.log(board);
+    let combinedValues = '';
+    boardValue = board.map(card => card.value);
+    boardSuits = board.map(card => card.suit);
+    for (let i = 0; i < board.length; i++){
+        combinedValues += boardValue[i];
+        combinedValues += `${boardSuits[i]} `;
+    }
+    boardDisplay.textContent = combinedValues;
+}
 
 document.getElementById('pot').textContent = `Pot:${pot}`
 document.getElementById('stack').textContent = `Stack:${stack}`
