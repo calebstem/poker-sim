@@ -85,10 +85,20 @@ function newHand(){
     riverDrawn = false;
     board = [];
     boardDisplay.textContent = '';
-    for(let i = 0; i < players.length; i++){
-        players[i].hand = drawFrom(newDeck)
-    };
+    updatePlayerInfo();
+    console.table(players);
     stringHand();
+}
+
+function updatePlayerInfo(){
+    for (let i = 0; i <= 5; i++){
+        players[i].hand = drawFrom(newDeck)
+        if (players[i].position == 5){
+            players[i].position = 0;
+        } else {
+        players[i].position++;
+        }
+    }
 }
 
 function potIn(){
@@ -142,6 +152,7 @@ function stringBoard(){
 
 document.getElementById('pot').textContent = `Pot:${pot}`
 document.getElementById('stack').textContent = `Stack:${players[0].stack}`
+document.getElementById('positionDisplay').textContent = `Position: 0`;
 
 document.getElementById('drawHand').onclick = function () {newHand()};
 document.getElementById('flopButton').onclick = function () {raise()};
