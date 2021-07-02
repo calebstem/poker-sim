@@ -50,37 +50,51 @@ function drawRiver(deck){
     return;
 }
 
-let newDeck;
-let stack = 100;
+let newDeck = getDeck();
+shuffle(newDeck);
 let pot = 0;
-let hand = '';
 let board = [];
+let players = [];
+createPlayers();
 let flopDrawn = false;
 let turnDrawn = false;
 let riverDrawn = '';
+
+
+
+
 const betInput = document.getElementById('betSize');
 
+function createPlayers(){
+for (let i = 0;i<=5;i++){
+    let playerTemplate = {
+    hand: drawFrom(newDeck),
+    position: i,
+    stack: 100
+    }
+    players.push(playerTemplate);
+}
+console.table(players);
+}
 
 function newHand(){
     newDeck = getDeck();
     shuffle(newDeck);
-    hand = drawFrom(newDeck);
     flopDrawn = false;
     turnDrawn = false;
     riverDrawn = false;
     board = [];
     boardDisplay.textContent = '';
-    return hand;
 }
 
 function potIn(){
     let betAmount = Number(betInput.value);
-    if(betAmount <= stack && betAmount > 0){
+    if(betAmount <= players[0].stack && betAmount > 0){
         pot += betAmount;
-        stack -= betAmount;
+        players[0].stack -= betAmount;
     }
     document.getElementById('pot').textContent = `Pot:${pot}`
-    document.getElementById('stack').textContent = `Stack:${stack}`
+    document.getElementById('stack').textContent = `Stack:${players[0].stack}`
 }
 
 function raise(){
@@ -99,11 +113,14 @@ function raise(){
     }
 }
 
+
+
+
 function stringHand(){
-    newHand();
     const handDisplay = document.getElementById('handDisplay');
-    handValue = hand.map(card => card.value);
-    handSuits = hand.map(card => card.suit);
+    let playerHand = players[0].hand;
+    handValue = playerHand.map(card => card.value);
+    handSuits = playerHand.map(card => card.suit);
     handDisplay.textContent = `${handValue[0]}${handSuits[0]},${handValue[1]}${handSuits[1]}`;
 }
 
@@ -121,8 +138,8 @@ function stringBoard(){
 }
 
 document.getElementById('pot').textContent = `Pot:${pot}`
-document.getElementById('stack').textContent = `Stack:${stack}`
+document.getElementById('stack').textContent = `Stack:${players[0].stack}`
 
-document.getElementById('drawHand').onclick = function () {stringHand()};
+document.getElementById('drawHand').onclick = function () {newHand()};
 document.getElementById('flopButton').onclick = function () {raise()};
 
