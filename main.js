@@ -56,6 +56,7 @@ let pot = 0;
 let board = [];
 let players = [];
 createPlayers();
+stringHand();
 let flopDrawn = false;
 let turnDrawn = false;
 let riverDrawn = '';
@@ -74,7 +75,6 @@ for (let i = 0;i<=5;i++){
     }
     players.push(playerTemplate);
 }
-console.table(players);
 }
 
 function newHand(){
@@ -85,6 +85,10 @@ function newHand(){
     riverDrawn = false;
     board = [];
     boardDisplay.textContent = '';
+    for(let i = 0; i < players.length; i++){
+        players[i].hand = drawFrom(newDeck)
+    };
+    stringHand();
 }
 
 function potIn(){
@@ -126,7 +130,6 @@ function stringHand(){
 
 function stringBoard(){
     const boardDisplay = document.getElementById('boardDisplay');
-    console.log(board);
     let combinedValues = '';
     boardValue = board.map(card => card.value);
     boardSuits = board.map(card => card.suit);
